@@ -1,0 +1,34 @@
+# --- Project Documentation (Exclude personal/local docs) ---
+*.docx
+*.pdf
+WSL Reminders.docx
+GrantMind Project Proposal.docx
+GrantMind Starter Guide.docx
+GrantMind Starter Guide.pdf
+polkadot-hackathon-guide.pdf
+
+# --- Foundry / Solidity ---
+# Build artifacts and cache
+out/
+cache/
+# Forge installs dependencies as submodules; 
+# git tracks the reference, but we usually ignore the folder content
+# lib/ 
+
+# --- JavaScript / Node.js ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.papi/
+
+# --- Environment & Security (CRITICAL) ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# --- Operating System Files ---
+.DS_Store
+Thumbs.db

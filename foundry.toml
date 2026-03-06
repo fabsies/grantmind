@@ -1,0 +1,26 @@
+[profile.default]
+src = "src"
+out = "out"
+test = "test"
+script = "script"
+libs = [
+    "lib",
+    "node_modules",
+]
+remappings = [
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+    "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+    "forge-std/=lib/openzeppelin-contracts/lib/forge-std/src/",
+    "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
+    "openzeppelin-contracts/=lib/openzeppelin-contracts/",
+]
+
+[profile.default.resolc]
+optimizer = true
+optimizer_mode = "3"
+
+[rpc_endpoints]
+passet_hub = "https://testnet-passet-hub-eth-rpc.polkadot.io"
+
+[etherscan]
+passet_hub = { key = "dummy", url = "https://blockscout-passet-hub.parity-testnet.parity.io" }
