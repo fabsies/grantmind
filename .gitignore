@@ -1,11 +1,7 @@
 # --- Project Documentation (Exclude personal/local docs) ---
 *.docx
 *.pdf
-WSL Reminders.docx
-GrantMind Project Proposal.docx
-GrantMind Starter Guide.docx
-GrantMind Starter Guide.pdf
-polkadot-hackathon-guide.pdf
+
 
 # --- Foundry / Solidity ---
 # Build artifacts and cache

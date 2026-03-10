@@ -15,5 +15,10 @@
     "@google/generative-ai": "^0.24.1",
     "@polkadot-api/cli": "^0.18.1",
     "@polkadot-api/descriptors": "file:.papi\\descriptors"
+  },
+  "devDependencies": {
+    "@types/node": "^25.4.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3"
   }
 }
