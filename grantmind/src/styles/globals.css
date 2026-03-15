@@ -1,0 +1,45 @@
+@import './tokens.css';
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: var(--brand-background);
+  color: #ffffff;
+  font-family: var(--font-sans), sans-serif;
+  min-height: 100vh;
+}
+
+::selection {
+  background-color: var(--brand-accent);
+  color: #ffffff;
+}
+
+.extra-condensed {
+  font-stretch: extra-condensed;
+  letter-spacing: -0.05em;
+}
+
+.text-glow-purple {
+  text-shadow: 0 0 15px rgba(124, 92, 191, 0.4);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--brand-background);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--brand-border);
+}
+
+/* Base utility for hiding elements */
+.hidden {
+  display: none !important;
+}

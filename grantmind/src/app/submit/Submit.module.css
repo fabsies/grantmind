@@ -1,0 +1,542 @@
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem 1rem;
+}
+
+.container {
+  width: 100%;
+  max-width: 56rem;
+}
+
+.header {
+  margin-bottom: 3rem;
+}
+
+.headerTitleBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: bold;
+  letter-spacing: -0.05em;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-mono), monospace;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  color: #8888aa;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.875rem;
+}
+
+.progressText {
+  text-align: right;
+  font-family: var(--font-mono), monospace;
+}
+
+.progressPercent {
+  color: var(--brand-accent);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.progressLabel {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+}
+
+.progressBarTrack {
+  width: 100%;
+  height: 0.75rem;
+  background-color: rgba(124, 92, 191, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 1px solid var(--brand-border);
+}
+
+.progressBarFill {
+  height: 100%;
+  background-color: var(--brand-accent);
+  width: 60%;
+  box-shadow: 0 0 15px rgba(92, 68, 156, 0.5);
+}
+
+.steps {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+  padding: 0 0.25rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.step.start { align-items: flex-start; }
+.step.center { align-items: center; }
+.step.end { align-items: flex-end; }
+
+.dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--brand-accent);
+  border-radius: 9999px;
+}
+
+.dotInactive {
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #334155;
+  border-radius: 9999px;
+}
+
+.stepLabel {
+  font-size: 0.625rem;
+  font-family: var(--font-mono), monospace;
+  text-transform: uppercase;
+  color: #8888aa;
+}
+
+.stepLabelActive {
+  font-size: 0.625rem;
+  font-family: var(--font-mono), monospace;
+  text-transform: uppercase;
+  color: var(--brand-accent);
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.stepLabelInactive {
+  font-size: 0.625rem;
+  font-family: var(--font-mono), monospace;
+  text-transform: uppercase;
+  color: #8888aa;
+  opacity: 0.5;
+}
+
+.layoutGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .layoutGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .formArea {
+    grid-column: span 2 / span 2;
+  }
+}
+
+.formArea {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.surface {
+  padding: 1.5rem;
+  background-color: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: 0.75rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .formGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-family: var(--font-mono), monospace;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8888aa;
+}
+
+.hackerInput {
+  background-color: var(--brand-background);
+  border: 1px solid var(--brand-border);
+  color: #ffffff;
+  font-family: var(--font-mono), monospace;
+  transition: all 0.2s ease;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  width: 100%;
+  font-size: 0.875rem;
+  appearance: none;
+}
+
+.hackerInput:focus {
+  border-color: var(--brand-accent);
+  outline: none;
+  box-shadow: 0 0 0 1px var(--brand-accent);
+}
+
+.hackerInput::placeholder {
+  color: #555577;
+}
+
+.inputIconWrapper {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 0.75rem;
+  top: 0.75rem;
+  color: rgba(136, 136, 170, 0.6);
+  font-size: 1.125rem;
+  font-family: "Material Symbols Outlined", sans-serif;
+  user-select: none;
+}
+
+.inputWithIcon {
+  padding-left: 2.5rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-sans), sans-serif;
+  font-weight: bold;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sectionIcon {
+  font-family: "Material Symbols Outlined", sans-serif;
+  color: var(--brand-accent);
+}
+
+.milestonesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.milestoneItem {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1rem;
+  background-color: var(--brand-background);
+  border: 1px solid var(--brand-border);
+  border-radius: 0.5rem;
+}
+
+.milestoneNumber {
+  font-family: var(--font-mono), monospace;
+  color: var(--brand-accent);
+  font-weight: bold;
+}
+
+.milestoneContent {
+  flex: 1;
+}
+
+.milestoneTitle {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.milestoneDesc {
+  font-size: 0.75rem;
+  color: #8888aa;
+  margin-top: 0.25rem;
+}
+
+.deleteIcon {
+  font-family: "Material Symbols Outlined", sans-serif;
+  color: #8888aa;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.deleteIcon:hover {
+  color: #f87171;
+}
+
+.addMilestoneBtn {
+  width: 100%;
+  padding: 0.75rem 0;
+  border: 1px dashed var(--brand-border);
+  border-radius: 0.5rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #8888aa;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.addMilestoneBtn:hover {
+  border-color: rgba(124, 92, 191, 0.5);
+  color: var(--brand-accent);
+}
+
+.actionRow {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1rem;
+}
+
+.backBtn {
+  padding: 0.75rem 2rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  border: 1px solid var(--brand-border);
+  color: #8888aa;
+  background: transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.backBtn:hover {
+  background-color: var(--brand-surface);
+}
+
+.submitBtn {
+  padding: 1rem 2.5rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  background-color: var(--brand-accent);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 10px 15px -3px rgba(124, 92, 191, 0.2);
+}
+
+.submitBtn:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.submitBtn:disabled {
+  background-color: rgba(124, 92, 191, 0.5);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.errorBanner {
+  padding: 1rem;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 0.5rem;
+  color: #f87171;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.aiPanel {
+  padding: 1.5rem;
+  background-color: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.watermark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem;
+  opacity: 0.1;
+  font-family: "Material Symbols Outlined", sans-serif;
+  font-size: 3.75rem;
+}
+
+.aiTitle {
+  font-family: var(--font-mono), monospace;
+  font-weight: bold;
+  color: var(--brand-accent);
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.aiDesc {
+  font-size: 0.75rem;
+  font-family: var(--font-mono), monospace;
+  color: #8888aa;
+  margin-bottom: 1.5rem;
+}
+
+.fakeBtn {
+  width: 100%;
+  padding: 0.75rem 0;
+  background-color: var(--brand-accent);
+  color: #ffffff;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.boltIcon {
+  font-family: "Material Symbols Outlined", sans-serif;
+  font-size: 0.875rem;
+}
+
+.evaluatingBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 0;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  border: 2px solid var(--brand-accent);
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.evaluatingText {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--brand-accent);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.scoreResultBox {
+  margin-top: 2rem;
+  border-top: 1px solid var(--brand-border);
+  padding-top: 1.5rem;
+}
+
+.scoreSummary {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  color: #8888aa;
+  margin-bottom: 1rem;
+  line-height: 1.625;
+}
+
+.scoreRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.scoreLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  color: #8888aa;
+}
+
+.scoreValueGreen {
+  font-family: var(--font-mono), monospace;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--brand-success);
+}
+
+.scoreValueAmber {
+  font-family: var(--font-mono), monospace;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #fbbf24;
+}
+
+.tipBox {
+  padding: 1.5rem;
+  background-color: rgba(22, 22, 32, 0.5);
+  border: 1px solid var(--brand-border);
+  border-radius: 0.75rem;
+}
+
+.tipTitle {
+  font-family: var(--font-mono), monospace;
+  font-weight: bold;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tipIcon {
+  font-family: "Material Symbols Outlined", sans-serif;
+  color: var(--brand-accent);
+  font-size: 0.875rem;
+}
+
+.tipText {
+  font-size: 0.6875rem; /* ~11px */
+  font-family: var(--font-mono), monospace;
+  color: #8888aa;
+  line-height: 1.625;
+}

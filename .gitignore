@@ -31,3 +31,10 @@ Thumbs.db
 
 # timestamped logs and outputs from the broadcast script
 broadcast/**/run-[0-9]*.json
+
+# Design assets
+stitch_design/
+guardrails.md
+
+# Archives
+*.zip

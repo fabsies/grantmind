@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@tanstack/react-query": "^5.90.21",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "viem": "^2.47.1"
+    "viem": "^2.47.1",
+    "wagmi": "^3.5.0"
   },
   "devDependencies": {
     "@types/node": "^20",
