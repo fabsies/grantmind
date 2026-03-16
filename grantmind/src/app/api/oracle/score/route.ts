@@ -62,29 +62,43 @@ export async function POST(req: NextRequest) {
     }
 
     // Call Gemini
+    const isMock = process.env.MOCK_ORACLE === 'true';
+
+  let score: number;
+  let summary: string;
+  let breakdown: object;
+
+  if (isMock) {
+    score = 75;
+    summary = 'Mock evaluation: Strong technical proposal with clear ecosystem alignment.';
+    breakdown = { innovation: 19, feasibility: 22, ecosystemAlignment: 19, teamCredibility: 15 };
+  } else {
     const userContent = `PROPOSAL TITLE: ${title}
-DESCRIPTION: ${description}
-REQUESTED FUNDING: ${requestedAmount}
-RECIPIENT WALLET: ${recipientAddress}
-SUPPORTING LINKS: ${links ?? "None provided"}`;
+  DESCRIPTION: ${description}
+  REQUESTED FUNDING: ${requestedAmount}
+  RECIPIENT WALLET: ${recipientAddress}
+  SUPPORTING LINKS: ${links ?? "None provided"}`;
 
-    const result = await model.generateContent(userContent);
-    const responseText = result.response.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? "";
+  const result = await model.generateContent(userContent);
+  const responseText = result.response.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? "";
 
-    let parsed: { score: number; summary: string; breakdown: object };
-    try {
-      parsed = JSON.parse(responseText);
-    } catch {
-      console.error("Gemini returned unparseable response:", responseText);
-      return NextResponse.json(
-        { error: "AI scoring failed", detail: "GEMINI_PARSE_ERROR: unparseable response" },
-        { status: 422 }
-      );
-    }
+  let parsed: { score: number; summary: string; breakdown: object };
+  try {
+    parsed = JSON.parse(responseText);
+  } catch {
+    console.error("Gemini returned unparseable response:", responseText);
+    return NextResponse.json(
+      { error: "AI scoring failed", detail: "GEMINI_PARSE_ERROR: unparseable response" },
+      { status: 422 }
+    );
+  }
 
-    const score = parsed.score;
-    const summary = parsed.summary;
-    const breakdown = parsed.breakdown;
+  score = parsed.score;
+  summary = parsed.summary;
+  breakdown = parsed.breakdown;
+}
+
+console.log('MOCK_ORACLE:', process.env.MOCK_ORACLE, '| isMock:', isMock);
 
     // Fix 7: score must be 1-100, not 0-100
     if (!Number.isInteger(score) || score < 1 || score > 100) {
@@ -142,5 +156,5 @@ SUPPORTING LINKS: ${links ?? "None provided"}`;
       error: "Internal server error",
       detail: error instanceof Error ? error.message : String(error)
   }, { status: 500 });
-}
+  }
 }
