@@ -23,7 +23,7 @@ const config = createConfig({
   chains: [passetHub],
   connectors: [injected()],
   transports: {
-    [passetHub.id]: http(),
+    [passetHub.id]: http(CHAIN_CONFIG.rpcUrl),
   },
 });
 
