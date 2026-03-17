@@ -1,0 +1,138 @@
+.container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: transparent;
+  border: 1px solid var(--brand-border);
+  color: #8888aa;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.toggle:hover {
+  color: var(--brand-accent);
+  border-color: var(--brand-accent);
+  background-color: rgba(0, 255, 170, 0.1);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  width: 300px;
+  background-color: var(--brand-dark);
+  border: 1px solid var(--brand-border);
+  border-radius: 0.25rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  animation: slideDown 0.2s ease-out forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header {
+  padding: 1.25rem;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--brand-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #8888aa;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: var(--font-sans);
+}
+
+.balance {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  color: #ffffff;
+  font-weight: 700;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.ticker {
+  font-size: 0.875rem;
+  color: var(--brand-accent);
+}
+
+.body {
+  padding: 1.25rem;
+}
+
+.desc {
+  font-size: 0.875rem;
+  color: #8888aa;
+  line-height: 1.5;
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+}
+
+.claimBtn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--brand-accent);
+  color: var(--brand-dark);
+  border: none;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  border-radius: 0.125rem;
+}
+
+.claimBtn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.claimBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error {
+  margin-top: 1rem;
+  margin-bottom: 0;
+  color: #ff4444;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  word-break: break-word;
+}
+
+.success {
+  margin-top: 1rem;
+  margin-bottom: 0;
+  color: var(--brand-accent);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+}

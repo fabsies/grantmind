@@ -7,6 +7,7 @@ import { parseAbi, formatUnits } from "viem";
 import { CONTRACT_ADDRESSES } from "@/config/contracts";
 import Link from 'next/link';
 import styles from './Proposal.module.css';
+import { useToast } from '@/components/ToastContext';
 
 const GRANT_REGISTRY_ABI = [
   {
@@ -66,8 +67,13 @@ export default function ProposalDetailPage() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
+  const { addToast } = useToast();
+
   const [voteTerminalVisible, setVoteTerminalVisible] = useState(false);
   const [voteAction, setVoteAction] = useState<"APPROVE" | "REJECT" | null>(null);
+
+  // Confirmation modal state
+  const [modalPending, setModalPending] = useState<0 | 1 | null>(null);
 
   const { data: proposalData, isLoading, isError, error } = useReadContract({
     address: CONTRACT_ADDRESSES.grantRegistry as `0x${string}`,
@@ -117,7 +123,16 @@ export default function ProposalDetailPage() {
     };
   }, [proposalData]);
 
-  const handleVote = async (support: 0 | 1) => {
+  // Open confirmation modal
+  const handleVoteIntent = (support: 0 | 1) => {
+    setModalPending(support);
+  };
+
+  // Confirmed — actually cast the vote
+  const handleVoteConfirm = async () => {
+    if (modalPending === null) return;
+    const support = modalPending;
+    setModalPending(null);
     setVoteAction(support === 1 ? "APPROVE" : "REJECT");
     setVoteTerminalVisible(true);
 
@@ -128,22 +143,56 @@ export default function ProposalDetailPage() {
         functionName: "castVote",
         args: [BigInt(proposalId), support],
       });
-    } catch (error) {
-      console.error("Voting failed:", error);
+    } catch (err: unknown) {
+      console.error("Voting failed:", err);
+      setVoteTerminalVisible(false);
+      const msg = (err as { shortMessage?: string })?.shortMessage;
+      addToast(msg || 'Vote transaction failed', 'error');
     }
   };
+
+  const handleVoteCancel = () => setModalPending(null);
+
+  // Fire toast on successful vote confirmation
+  useEffect(() => {
+    if (isConfirmed) {
+      addToast(`Vote cast successfully!`, 'success');
+    }
+  }, [isConfirmed, addToast]);
 
   if (!mounted) return null;
 
   if (isLoading) {
-    return <main className={styles.main}><div className={styles.loadingBox}>Decrypting Proposal Data...</div></main>;
+    return (
+      <main className={styles.main}>
+        <div className={styles.skeletonHero}>
+          <div className={`${styles.skeletonBar} ${styles.skMedium}`} />
+          <div className={`${styles.skeletonBar} ${styles.skLong}`} style={{ marginTop: '1rem', height: '2rem' }} />
+          <div className={`${styles.skeletonBar} ${styles.skMedium}`} style={{ marginTop: '0.75rem' }} />
+        </div>
+        <div className={styles.skeletonGrid}>
+          <div className={styles.skeletonPanel}>
+            {[1,2,3].map(n => <div key={n} className={`${styles.skeletonBar} ${styles.skFull}`} style={{ marginBottom: '0.75rem' }} />)}
+          </div>
+          <div className={styles.skeletonPanel}>
+            {[1,2,3,4].map(n => <div key={n} className={`${styles.skeletonBar} ${styles.skFull}`} style={{ marginBottom: '0.75rem' }} />)}
+          </div>
+          <div className={styles.skeletonPanel}>
+            {[1,2].map(n => <div key={n} className={`${styles.skeletonBar} ${styles.skFull}`} style={{ marginBottom: '0.75rem' }} />)}
+          </div>
+        </div>
+      </main>
+    );
   }
 
   if (isError || (!isLoading && proposalData === undefined)) {
     return (
       <main className={styles.main}>
-        <div className={styles.loadingBox} style={{ animation: 'none', color: '#ef4444' }}>
-          Error 404: Proposal ID Not Found
+        <div className={styles.emptyState}>
+          <span className={`material-symbols-outlined ${styles.emptyIcon}`}>error_outline</span>
+          <p className={styles.emptyTitle}>Proposal Not Found</p>
+          <p className={styles.emptyDesc}>Proposal ID #{proposalId} does not exist on-chain.</p>
+          <Link href="/" className={styles.emptyLink}>← Back to Leaderboard</Link>
         </div>
       </main>
     );
@@ -381,7 +430,7 @@ export default function ProposalDetailPage() {
             <div className={styles.btnGroup}>
               <button
                 className={styles.btnApprove}
-                onClick={() => handleVote(1)}
+                onClick={() => handleVoteIntent(1)}
                 disabled={!proposal.exists}
               >
                 <div className={styles.btnInner}>
@@ -393,7 +442,7 @@ export default function ProposalDetailPage() {
 
               <button
                 className={styles.btnReject}
-                onClick={() => handleVote(0)}
+                onClick={() => handleVoteIntent(0)}
                 disabled={!proposal.exists}
               >
                 <div className={styles.btnInner}>
@@ -403,6 +452,27 @@ export default function ProposalDetailPage() {
                 <span className={styles.btnSub}>Record &quot;Against&quot; Vote</span>
               </button>
             </div>
+
+            {/* ─── Confirmation Modal ─────────────────────────── */}
+            {modalPending !== null && (
+              <div className={styles.modalOverlay} onClick={handleVoteCancel}>
+                <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                  <h4 className={styles.modalTitle}>Confirm Your Vote</h4>
+                  <p className={styles.modalDesc}>
+                    You are about to cast an <strong>{modalPending === 1 ? 'APPROVE ✓' : 'REJECT ✗'}</strong> vote for Proposal #{proposalId.padStart(4, '0')} on-chain. This action is <strong>irreversible</strong>.
+                  </p>
+                  <div className={styles.modalBtns}>
+                    <button className={styles.modalCancel} onClick={handleVoteCancel}>Cancel</button>
+                    <button
+                      className={modalPending === 1 ? styles.modalConfirmApprove : styles.modalConfirmReject}
+                      onClick={handleVoteConfirm}
+                    >
+                      Confirm {modalPending === 1 ? 'APPROVE' : 'REJECT'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--brand-border)' }}>
               <p style={{ fontSize: '0.625rem', color: '#8888aa', fontStyle: 'italic', lineHeight: 1.5 }}>

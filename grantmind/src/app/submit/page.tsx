@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseAbi, parseUnits, decodeEventLog } from "viem";
 import { CONTRACT_ADDRESSES } from "@/config/contracts";
+import { useToast } from "@/components/ToastContext";
 import styles from './Submit.module.css';
 
 const GRANT_REGISTRY_ABI = parseAbi([
@@ -13,6 +14,7 @@ const GRANT_REGISTRY_ABI = parseAbi([
 
 export default function SubmitProposalPage() {
   const { address } = useAccount();
+  const { addToast } = useToast();
 
   const [title, setTitle] = useState("");
   const [recipient, setRecipient] = useState("");
@@ -120,10 +122,13 @@ export default function SubmitProposalPage() {
 
           setAiScore(result);
           setStatus("success");
+          addToast('Proposal submitted & AI score received!', 'success');
         } catch (error: unknown) {
           console.error("Failed to process confirmation/AI score", error);
           setStatus("error");
-          setErrorMsg("Transaction successful, but AI evaluation failed: " + (error instanceof Error ? error.message : "Unknown error"));
+          const errMsg = "Transaction successful, but AI evaluation failed: " + (error instanceof Error ? error.message : "Unknown error");
+          setErrorMsg(errMsg);
+          addToast(errMsg, 'error');
         }
       }
     };

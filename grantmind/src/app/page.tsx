@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { useReadContract, useReadContracts } from "wagmi";
+import { useReadContract, useReadContracts, useConnect, useAccount, useDisconnect } from "wagmi";
+import { injected } from "wagmi/connectors";
 import { formatUnits } from "viem";
 import { CONTRACT_ADDRESSES } from "@/config/contracts";
 import { grantRegistryAbi } from "@/lib/abis/GrantRegistry";
 import Link from 'next/link';
-import styles from './Leaderboard.module.css';
+import styles from './Home.module.css';
 
 type Proposal = {
   index: number;
@@ -23,18 +24,23 @@ type Proposal = {
   category: string;
 };
 
-const getStatusMap = (aiReviewed: boolean) => {
-  if (!aiReviewed) return { text: "Pending Eval", style: "Gray" };
-  return { text: "Under Review", style: "Amber" };
+const CATEGORY_COLORS: Record<string, string> = {
+  "Infrastructure":    "#4ade80",
+  "ZKP Research":      "#a78bfa",
+  "Developer Tooling": "#38bdf8",
+  "DAO Governance":    "#fb923c",
+  "General":           "#8888aa",
 };
 
-export default function LeaderboardPage() {
-  const [filter, setFilter] = useState("All");
+export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const timeStr = new Date().toLocaleTimeString('en-US', { hour12: false });
+  const { address, isConnected } = useAccount();
+  const { connect } = useConnect();
+  const { disconnect } = useDisconnect();
 
+  // ── Contract reads ────────────────────────────────────────────
   const { data: nextIdData } = useReadContract({
     address: CONTRACT_ADDRESSES.grantRegistry as `0x${string}`,
     abi: grantRegistryAbi,
@@ -55,196 +61,231 @@ export default function LeaderboardPage() {
 
   const proposals: Proposal[] = useMemo(() => {
     if (!proposalsData) return [];
-
-    const parsed = (proposalsData as unknown as { status: string; result: unknown }[])
+    return (proposalsData as unknown as { status: string; result: unknown }[])
       .filter((res) => res.status === "success" && !!res.result)
       .map((res, index) => {
-        const { applicant, title, description, requestedAmount, recipientWallet, referenceLinks, exists, aiReviewed, aiScore, aiSummary } = res.result as {
-          applicant: string;
-          title: string;
-          description: string;
-          requestedAmount: bigint;
-          recipientWallet: string;
-          referenceLinks: string[];
-          exists: boolean;
-          aiReviewed: boolean;
-          aiScore: number;
-          aiSummary: string;
+        const raw = res.result as {
+          applicant: string; title: string; description: string;
+          requestedAmount: bigint; recipientWallet: string;
+          referenceLinks: string[]; exists: boolean;
+          aiReviewed: boolean; aiScore: number; aiSummary: string;
         };
-
         let category = "General";
-        const catMatch = description.match(/\[Category:\s*(.+?)\]/i);
-        if (catMatch && catMatch[1]) {
-          category = catMatch[1].trim();
-        }
-
-        return {
-          index: index + 1,
-          applicant, title, description, requestedAmount, recipientWallet, referenceLinks, exists, aiReviewed, aiScore, aiSummary, category
-        };
-      });
-
-    return parsed.sort((a, b) => b.aiScore - a.aiScore);
+        const catMatch = raw.description.match(/\[Category:\s*(.+?)\]/i);
+        if (catMatch?.[1]) category = catMatch[1].trim();
+        return { index: index + 1, category, ...raw };
+      })
+      .sort((a, b) => b.aiScore - a.aiScore);
   }, [proposalsData]);
 
-  const filteredProposals = proposals.filter(p => filter === "All" || p.category === filter);
+  const liveTop3 = proposals.slice(0, 3);
+  const tableTop  = proposals.slice(0, 5);
 
   if (!mounted) return null;
 
   return (
     <main className={styles.main}>
-      <div className={styles.headerSection}>
-        <div className={styles.breadcrumb}>
-          <span>GrantMind</span>
-          <span className={styles.breadcrumbSlash}>/</span>
-          <span className={styles.breadcrumbActive}>Leaderboard</span>
-        </div>
-        <div className={styles.titleBox}>
-          <div>
-            <h1 className={styles.title}>
-              Proposal <span className={styles.titleAccent}>Leaderboard</span>
-            </h1>
-          </div>
-          <p className={styles.subtitle}>
-            Real-time AI-ranked grant evaluations based on technical feasibility, community impact, and resource allocation efficiency.
+
+      {/* ── HERO ───────────────────────────────────────────────── */}
+      <section className={styles.hero}>
+        <div className={styles.heroLeft}>
+          <p className={styles.heroEyebrow}>// POWERED BY POLKADOT HUB</p>
+          <h1 className={styles.heroHeadline}>
+            <span className={styles.heroWhite}>AI-POWERED</span>
+            <span className={styles.heroPurple}>DAO GRANT</span>
+            <span className={styles.heroWhite}>ALLOCATION</span>
+          </h1>
+          <p className={styles.heroSubtitle}>
+            Revolutionizing community distribution through autonomous evaluation
+            and transparent treasury logic. Verified by intelligence.
           </p>
+          <div className={styles.walletBtns}>
+            {isConnected ? (
+              <button className={styles.walletBtnActive} onClick={() => disconnect()}>
+                <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>account_balance_wallet</span>
+                {address?.slice(0, 6)}...{address?.slice(-4)}
+              </button>
+            ) : (
+              <>
+                <button
+                  className={styles.walletBtn}
+                  onClick={() => connect({ connector: injected() })}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>account_balance_wallet</span>
+                  METAMASK
+                </button>
+                <button
+                  className={`${styles.walletBtn} ${styles.walletBtnOutline}`}
+                  onClick={() => connect({ connector: injected() })}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>link</span>
+                  WALLETCONNECT
+                </button>
+              </>
+            )}
+          </div>
         </div>
-      </div>
 
-      <div className={styles.filters}>
-        <button
-          onClick={() => setFilter("All")}
-          className={filter === "All" ? styles.filterBtnActive : styles.filterBtn}
-        >
-          <span className="material-symbols-outlined text-[14px]">filter_list</span> All
-        </button>
-        {["Infrastructure", "ZKP Research", "Developer Tooling", "DAO Governance"].map(cat => (
-          <button
-            key={cat}
-            onClick={() => setFilter(cat)}
-            className={filter === cat ? styles.filterBtnActive : styles.filterBtn}
-          >
-            {cat}
-          </button>
-        ))}
-        <div className={styles.syncBox}>
-          <span className={`material-symbols-outlined ${styles.syncIcon}`}>sync</span> LAST_SYNC: {timeStr}
+        {/* Live preview panel */}
+        <div className={styles.livePanel}>
+          <div className={styles.livePanelHeader}>
+            <div className={styles.trafficDots}>
+              <span className={styles.dotRed} />
+              <span className={styles.dotYellow} />
+              <span className={styles.dotGreen} />
+            </div>
+            <span className={styles.livePanelTitle}>LIVE PREVIEW // AUTONOMOUS_AGENT</span>
+          </div>
+          <div className={styles.livePanelBody}>
+            {isLoading ? (
+              [1,2,3].map(n => (
+                <div key={n} className={styles.liveRow}>
+                  <div className={`${styles.liveSkBar} ${styles.liveSkShort}`} />
+                  <div className={`${styles.liveSkBar} ${styles.liveSkLong}`} style={{ flex: 1 }} />
+                  <div className={`${styles.liveSkBar} ${styles.liveSkShort}`} />
+                </div>
+              ))
+            ) : liveTop3.length === 0 ? (
+              <p className={styles.liveEmpty}>No proposals yet.</p>
+            ) : liveTop3.map((p, i) => (
+              <Link key={p.index} href={`/proposals/${p.index}`} className={styles.liveRow}>
+                <div className={styles.liveRowLeft}>
+                  <span className={styles.liveId}>#GM-{String(p.index).padStart(3, '0')}</span>
+                  <span className={styles.liveName}>{p.title.toUpperCase()}</span>
+                </div>
+                <div className={styles.liveRowRight}>
+                  <span className={styles.liveAmount}>
+                    {Number(formatUnits(p.requestedAmount, 18)).toLocaleString()} PAS
+                  </span>
+                  <div className={styles.liveScoreRow}>
+                    <div className={styles.liveScoreTrack}>
+                      <div
+                        className={styles.liveScoreFill}
+                        style={{ width: p.aiReviewed ? `${p.aiScore}%` : '0%' }}
+                      />
+                    </div>
+                    <span className={styles.liveScoreLabel}>
+                      {p.aiReviewed ? `AI SCORE ${p.aiScore}%` : 'PENDING'}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className={styles.tableContainer}>
-        <div className={styles.tableScroll}>
+      {/* ── TOP PROPOSALS TABLE ─────────────────────────────────── */}
+      <section className={styles.tableSection}>
+        <div className={styles.tableSectionHeader}>
+          <h2 className={styles.tableSectionTitle}>TOP PROPOSALS</h2>
+          <span className={styles.viewAll}>VIEW ALL: DATASETS</span>
+        </div>
+
+        <div className={styles.tableWrap}>
           <table className={styles.table}>
-            <thead className={styles.tableHead}>
-              <tr>
-                <th className={styles.th}>Rank</th>
-                <th className={styles.th}>Project Name</th>
-                <th className={styles.th}>Category</th>
-                <th className={styles.th}>AI Score</th>
-                <th className={styles.th}>Funding</th>
-                <th className={styles.th}>Status</th>
+            <thead>
+              <tr className={styles.thead}>
+                <th className={styles.th}>PROPOSAL ID</th>
+                <th className={styles.th}>PROJECT NAME</th>
+                <th className={styles.th}>CATEGORY</th>
+                <th className={styles.th}>FUNDING REQUEST</th>
+                <th className={styles.th}>AI SCORE</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
+                [1,2,3].map(n => (
+                  <tr key={n} className={styles.skeletonRow}>
+                    {[1,2,3,4,5].map(c => (
+                      <td key={c} className={styles.skeletonCell}>
+                        <div className={`${styles.skBar} ${c === 2 ? styles.skLong : styles.skMed}`} />
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              ) : tableTop.length === 0 ? (
                 <tr>
-                  <td colSpan={6}>
-                    <div className={styles.loadingBox}>Encrypting telemetry stream...</div>
+                  <td colSpan={5}>
+                    <div className={styles.emptyState}>
+                      <span className={`material-symbols-outlined ${styles.emptyIcon}`}>inbox</span>
+                      <p className={styles.emptyTitle}>No Proposals Found</p>
+                      <p className={styles.emptyDesc}>No proposals have been submitted yet.</p>
+                      <Link href="/submit" className={styles.emptyLink}>Submit a Proposal →</Link>
+                    </div>
                   </td>
                 </tr>
-              ) : filteredProposals.length === 0 ? (
-                <tr>
-                  <td colSpan={6}>
-                    <div className={styles.loadingBox}>No proposals found.</div>
-                  </td>
-                </tr>
-              ) : (
-                filteredProposals.map((p, index) => {
-                  const statusInfo = getStatusMap(p.aiReviewed);
-                  const isTop = index === 0;
-
-                  return (
-                    <tr key={p.index} className={styles.tr}>
-                      <td className={styles.td}>
-                        <span className={styles.rank}>{(index + 1).toString().padStart(2, '0')}</span>
-                      </td>
-                      <td className={styles.td}>
-                        <Link href={`/proposals/${p.index}`} className={styles.projectBox}>
-                          <span className={styles.projectName}>{p.title}</span>
-                          <span className={styles.projectId}>ID: {p.index.toString().padStart(4, '0')}</span>
-                        </Link>
-                      </td>
-                      <td className={styles.td}>
-                        <span className={`${styles.categoryBadge} ${isTop ? styles.categoryActive : styles.categoryInactive}`}>
-                          {p.category}
+              ) : tableTop.map((p) => {
+                const catColor = CATEGORY_COLORS[p.category] ?? '#8888aa';
+                return (
+                  <tr key={p.index} className={styles.tr}>
+                    <td className={styles.td}>
+                      <span className={styles.proposalId}>#GM-{String(p.index).padStart(3, '0')}</span>
+                    </td>
+                    <td className={styles.td}>
+                      <Link href={`/proposals/${p.index}`} className={styles.projectName}>
+                        {p.title.toUpperCase()}
+                      </Link>
+                    </td>
+                    <td className={styles.td}>
+                      <span
+                        className={styles.catBadge}
+                        style={{ color: catColor, borderColor: catColor, background: `${catColor}18` }}
+                      >
+                        {p.category.slice(0, 5).toUpperCase()}
+                      </span>
+                    </td>
+                    <td className={styles.td}>
+                      <span className={styles.funding}>
+                        {Number(formatUnits(p.requestedAmount, 18)).toLocaleString()} PAS
+                      </span>
+                    </td>
+                    <td className={styles.td}>
+                      <div className={styles.scoreCell}>
+                        <div className={styles.scoreTrack}>
+                          <div
+                            className={styles.scoreFill}
+                            style={{ width: p.aiReviewed ? `${p.aiScore}%` : '0%' }}
+                          />
+                        </div>
+                        <span className={styles.scorePct}>
+                          {p.aiReviewed ? `${p.aiScore}%` : '--'}
                         </span>
-                      </td>
-                      <td className={styles.td}>
-                        <div className={styles.scoreBox}>
-                          <span className={`${styles.scoreValue} ${p.aiScore < 50 ? styles.scoreValueLow : ''}`}>
-                            {p.aiReviewed ? p.aiScore.toString() : '--'}
-                          </span>
-                          {p.aiReviewed && (
-                            <div className={styles.scoreTrack}>
-                              <div
-                                className={`${styles.scoreFill} ${p.aiScore < 50 ? styles.scoreFillLow : ''}`}
-                                style={{ width: `${p.aiScore}%` }}
-                              ></div>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                      <td className={styles.td}>
-                        <span className={styles.funding}>{Number(formatUnits(p.requestedAmount, 18)).toLocaleString()} PAS</span>
-                      </td>
-                      <td className={styles.td}>
-                        <div className={styles.statusBox}>
-                          <div className={styles[`statusDot${statusInfo.style}`]}></div>
-                          <span className={styles[`statusText${statusInfo.style}`]}>
-                            {statusInfo.text}
-                          </span>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
+      </section>
 
-        <div className={styles.pagination}>
-          <span>Page [01] of [01]</span>
-          <div className={styles.paginationBtns}>
-            <button className={styles.pageBtn}>Prev_Page</button>
-            <button className={styles.pageBtn}>Next_Page</button>
-          </div>
-        </div>
-      </div>
-
+      {/* ── ANALYTICS CARDS ────────────────────────────────────── */}
       <div className={styles.analyticsGrid}>
         <div className={styles.analyticsCard}>
-          <span className={`${styles.analyticsIcon} material-symbols-outlined`}>analytics</span>
+          <span className={`material-symbols-outlined ${styles.analyticsIcon}`}>analytics</span>
           <h3 className={styles.analyticsTitle}>AI Accuracy</h3>
           <p className={styles.analyticsDesc}>
             Current model confidence interval: 94.2%. Scored against 1,200+ historical data points using decentralized compute clusters.
           </p>
         </div>
         <div className={styles.analyticsCard}>
-          <span className={`${styles.analyticsIcon} material-symbols-outlined`}>monitoring</span>
+          <span className={`material-symbols-outlined ${styles.analyticsIcon}`}>monitoring</span>
           <h3 className={styles.analyticsTitle}>Network Health</h3>
           <p className={styles.analyticsDesc}>
             Grant treasury currently distributing $4.2M across active workstreams with real-time milestone verification.
           </p>
         </div>
         <div className={styles.analyticsCard}>
-          <span className={`${styles.analyticsIcon} material-symbols-outlined`}>security</span>
+          <span className={`material-symbols-outlined ${styles.analyticsIcon}`}>security</span>
           <h3 className={styles.analyticsTitle}>Secure Eval</h3>
           <p className={styles.analyticsDesc}>
             Encrypted proposal submission system with zero-knowledge verification protocols ensuring contributor privacy.
           </p>
         </div>
       </div>
+
     </main>
   );
 }

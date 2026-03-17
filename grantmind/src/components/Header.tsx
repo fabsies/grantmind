@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 import styles from './Header.module.css';
+import { FaucetWidget } from './FaucetWidget';
 
 export function Header() {
   const { address, isConnected } = useAccount();
@@ -40,7 +41,8 @@ export function Header() {
           <Link href="/" className={styles.link}>LEADERBOARD</Link>
         </div>
 
-        <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <FaucetWidget />
           <button 
             className={styles.connectButton}
             onClick={handleConnect}

@@ -798,3 +798,219 @@
   width: 100%;
   flex: 1;
 }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ─── Skeleton loader ────────────────────────────────────────── */
+.skeletonHero {
+  padding: 2rem;
+  background-color: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: 0.75rem;
+}
+
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1280px) {
+  .skeletonGrid {
+    grid-template-columns: 1fr 2fr 1fr;
+  }
+}
+
+.skeletonPanel {
+  background-color: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.skeletonBar {
+  height: 0.875rem;
+  border-radius: 0.125rem;
+  background: linear-gradient(
+    90deg,
+    var(--brand-border) 25%,
+    rgba(124, 92, 191, 0.12) 50%,
+    var(--brand-border) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skMedium { width: 50%; }
+.skLong   { width: 80%; }
+.skFull   { width: 100%; }
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── Empty / error state ────────────────────────────────────── */
+.emptyState {
+  padding: 6rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 3rem !important;
+  color: var(--brand-border);
+}
+
+.emptyTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #f0f0f0;
+}
+
+.emptyDesc {
+  font-size: 0.8125rem;
+  color: #8888aa;
+  font-family: var(--font-mono), monospace;
+}
+
+.emptyLink {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  background-color: var(--brand-accent);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  border-radius: 0.125rem;
+  transition: opacity 0.2s ease;
+}
+
+.emptyLink:hover {
+  opacity: 0.8;
+}
+
+/* ─── Vote Confirmation Modal ────────────────────────────────── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background-color: rgba(15, 15, 20, 0.85);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal {
+  background-color: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  width: 100%;
+  max-width: 26rem;
+  animation: scaleIn 0.2s ease-out;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.92); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+.modalTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #f0f0f0;
+  margin-bottom: 0.75rem;
+}
+
+.modalDesc {
+  font-size: 0.875rem;
+  color: #8888aa;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.modalDesc strong {
+  color: #f0f0f0;
+}
+
+.modalBtns {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.modalCancel {
+  padding: 0.625rem 1.25rem;
+  background: transparent;
+  border: 1px solid var(--brand-border);
+  color: #8888aa;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.modalCancel:hover {
+  border-color: #8888aa;
+  color: #f0f0f0;
+}
+
+.modalConfirmApprove {
+  padding: 0.625rem 1.25rem;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid #22c55e;
+  color: #22c55e;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.15s ease;
+}
+
+.modalConfirmApprove:hover {
+  background: rgba(34, 197, 94, 0.25);
+}
+
+.modalConfirmReject {
+  padding: 0.625rem 1.25rem;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.15s ease;
+}
+
+.modalConfirmReject:hover {
+  background: rgba(239, 68, 68, 0.25);
+}
