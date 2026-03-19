@@ -89,7 +89,7 @@ export default function HomePage() {
       {/* ── HERO ───────────────────────────────────────────────── */}
       <section className={styles.hero}>
         <div className={styles.heroLeft}>
-          <p className={styles.heroEyebrow}>// POWERED BY POLKADOT HUB</p>
+          <p className={styles.heroEyebrow}>POWERED BY POLKADOT HUB</p>
           <h1 className={styles.heroHeadline}>
             <span className={styles.heroWhite}>AI-POWERED</span>
             <span className={styles.heroPurple}>DAO GRANT</span>
