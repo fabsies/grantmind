@@ -15,7 +15,7 @@ contract GrantDAO is ReentrancyGuard, Ownable {
     GovernanceToken public immutable govToken;
     GrantRegistry public immutable registry;
 
-    uint256 public constant VOTING_PERIOD = 7 days;
+    uint256 public constant VOTING_PERIOD = 10 minutes;
     uint256 public quorumNumerator;
     uint256 public constant QUORUM_DENOMINATOR = 10_000; // For basis points calculation
     uint256 public constant MIN_AI_SCORE = 50;

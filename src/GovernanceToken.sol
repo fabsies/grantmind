@@ -11,17 +11,6 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 // GovernanceToken.sol
 // ERC-20 + ERC20Votes for weighted governance
 
-// interface IGovernanceToken {
-//     function mint(address to, uint256 amount) external;
-//     function faucet() external;
-//     function setFaucetAmount(uint256 amount) external;
-//     function setFaucetCooldown(uint256 seconds_) external;
-
-// }
-
-//in case i need it, add the interface back in and have the contract implement it. for now, it's not necessary since the functions are all public and can be called directly on the contract address. 
-//make sure to inherit /*IGovernanceToken */ in the contract declaration if you decide to implement the interface.
-
 contract GovernanceToken is ERC20, ERC20Permit, ERC20Votes, Ownable {
     uint256 public faucetAmount = 100 * 10 ** decimals();
     uint256 public faucetCooldown = 1 days;

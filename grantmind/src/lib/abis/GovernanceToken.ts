@@ -19,5 +19,10 @@ export const governanceTokenAbi = [
     stateMutability: "view",
     inputs: [],
     outputs: [{ name: "", type: "uint8" }]
+  },
+  {
+    name: "FaucetCooldownNotMet",
+    type: "error",
+    inputs: [{ name: "timeRemaining", type: "uint256" }]
   }
 ];
