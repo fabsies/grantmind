@@ -1,8 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
+  experimental: {
+    serverComponentsExternalPackages: ['viem', '@google/generative-ai'],
+  },
 };
 
 export default nextConfig;
