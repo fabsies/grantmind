@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './Footer.module.css';
 
 export function Footer() {
@@ -9,9 +10,13 @@ export function Footer() {
         <div className={styles.content}>
           <div className={styles.brandArea}>
             <div className={styles.logoWrapper}>
-              <div className={styles.logoIcon}>
-                <div className={styles.logoInner}></div>
-              </div>
+              <Image
+                src="/grantmind_logo.png"
+                alt="GrantMind"
+                width={28}
+                height={28}
+                style={{ imageRendering: 'pixelated' }}
+              />
               <span className={styles.logoText}>GrantMind</span>
             </div>
             <p className={styles.copyright}>© 2024 GRANTMIND_PROTOCOL. ALL RIGHTS RESERVED.</p>

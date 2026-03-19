@@ -29,16 +29,20 @@ export function Header() {
     <header className={styles.header}>
       <nav className={styles.nav}>
         <Link href="/" className={styles.logoArea}>
-          <div className={styles.logoIcon}>
-            <div className={styles.logoInner}></div>
-          </div>
+          <Image
+            src="/grantmind_logo.png"
+            alt="GrantMind"
+            width={32}
+            height={32}
+            style={{ imageRendering: 'pixelated' }}
+          />
           <span className={styles.logoText}>GrantMind</span>
         </Link>
 
         <div className={styles.links}>
           <Link href="/" className={styles.link}>EXPLORE</Link>
           <Link href="/submit" className={styles.link}>SUBMIT</Link>
-          <Link href="/" className={styles.link}>LEADERBOARD</Link>
+          <Link href="/leaderboard" className={styles.link}>LEADERBOARD</Link>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

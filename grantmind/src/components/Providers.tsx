@@ -3,10 +3,11 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider, createConfig, http } from 'wagmi';
+import { defineChain } from 'viem';
 import { injected } from 'wagmi/connectors';
 import { CHAIN_CONFIG } from '@/config/contracts';
 
-const passetHub = {
+const passetHub = defineChain({
   id: CHAIN_CONFIG.id,
   name: 'Passet Hub Testnet',
   nativeCurrency: {
@@ -17,7 +18,7 @@ const passetHub = {
   rpcUrls: {
     default: { http: [CHAIN_CONFIG.rpcUrl] },
   },
-} as const;
+});
 
 const config = createConfig({
   chains: [passetHub],

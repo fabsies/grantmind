@@ -33,14 +33,17 @@ export function FaucetWidget() {
 
   useEffect(() => {
     if (isConfirmed) {
-      refetchBalance();
+      setTimeout(() => {
+        refetchBalance();
+      }, 3000);
       addToast('100 GMT claimed successfully!', 'success');
     }
   }, [isConfirmed, refetchBalance, addToast]);
 
   useEffect(() => {
     if (writeError) {
-      const msg = (writeError as { shortMessage?: string })?.shortMessage;
+      const msg = (writeError as { shortMessage?: string })?.shortMessage ?? '';
+      if (msg.toLowerCase().includes('user rejected') || msg.toLowerCase().includes('user denied')) return;
       addToast(msg || 'Claim failed. Faucet cooldown may be active.', 'error');
     }
   }, [writeError, addToast]);
@@ -65,14 +68,14 @@ export function FaucetWidget() {
     });
   };
 
-  const formattedBalance = balanceData !== undefined 
+  const formattedBalance = balanceData !== undefined
     ? parseFloat(formatUnits(balanceData as bigint, 18)).toLocaleString(undefined, { maximumFractionDigits: 2 })
     : '0';
 
   return (
     <div className={styles.container} ref={dropdownRef}>
-      <button 
-        className={styles.toggle} 
+      <button
+        className={styles.toggle}
         onClick={() => setIsOpen(!isOpen)}
         title="Token Faucet"
       >
@@ -89,12 +92,12 @@ export function FaucetWidget() {
             <p className={styles.desc}>
               Claim testnet tokens to vote on proposals. Limit once per day.
             </p>
-            <button 
-              className={styles.claimBtn} 
+            <button
+              className={styles.claimBtn}
               onClick={handleClaim}
               disabled={isPending || isConfirming}
             >
-              {isPending ? 'Confirming...' : isConfirming ? 'Minting...' : 'Claim 100 GMT'}
+              {isPending ? 'Waiting for wallet...' : isConfirming ? 'Minting...' : 'Claim 100 GMT'}
             </button>
             {writeError && (
               <p className={styles.error}>

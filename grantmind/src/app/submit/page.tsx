@@ -142,12 +142,12 @@ export default function SubmitProposalPage() {
         <div className={styles.header}>
           <div className={styles.headerTitleBox}>
             <div>
-              <h1 className={styles.title}>SUBMIT_PROPOSAL.SH</h1>
+              <h1 className={styles.title}>SUBMIT PROPOSAL</h1>
               <p className={styles.subtitle}>Deployment Phase: Technical Documentation</p>
             </div>
             <div className={styles.progressText}>
               <span className={styles.progressPercent}>60%</span>
-              <p className={styles.progressLabel}>System_Integrity</p>
+              <p className={styles.progressLabel}>System Integrity</p>
             </div>
           </div>
           <div className={styles.progressBarTrack}>
@@ -180,7 +180,7 @@ export default function SubmitProposalPage() {
               <div className={styles.formArea}>
                 <div className={styles.formGrid}>
                   <div className={styles.inputGroup}>
-                    <label className={styles.label}>Project_Name</label>
+                    <label className={styles.label}>Project Name</label>
                     <input
                       required
                       value={title}
@@ -205,7 +205,7 @@ export default function SubmitProposalPage() {
 
                 <div className={styles.formGrid}>
                   <div className={styles.inputGroup}>
-                    <label className={styles.label}>Grant_Amount_(PAS)</label>
+                    <label className={styles.label}>Grant Amount(PAS)</label>
                     <input
                       required
                       value={amount}
@@ -307,14 +307,14 @@ export default function SubmitProposalPage() {
             {/* AI Side Panel */}
             <div className={styles.aiPanel}>
               <div className={styles.watermark}>psychology</div>
-              <h3 className={styles.aiTitle}>AI_Neural_Evaluation</h3>
+              <h3 className={styles.aiTitle}>AI Neural Evaluation</h3>
 
               {!aiScore && status !== "evaluating" && (
                 <>
                   <p className={styles.aiDesc}>Run predictive analysis on your proposal to detect potential risks and scoring before submission.</p>
                   <button type="button" className={styles.fakeBtn}>
                     <span className={styles.boltIcon}>bolt</span>
-                    Run_Evaluation.bin
+                    Run Evaluation.bin
                   </button>
                 </>
               )}
@@ -332,7 +332,7 @@ export default function SubmitProposalPage() {
                     {aiScore.summary}
                   </div>
                   <div className={styles.scoreRow}>
-                    <span className={styles.scoreLabel}>Final_Score:</span>
+                    <span className={styles.scoreLabel}>Final Score:</span>
                     <span className={aiScore.score > 50 ? styles.scoreValueGreen : styles.scoreValueAmber}>
                       {aiScore.score}/100
                     </span>
